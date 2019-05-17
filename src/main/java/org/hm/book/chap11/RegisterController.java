@@ -25,11 +25,6 @@ public class RegisterController {
 
 	static final Logger logger = LogManager.getLogger();
 
-	@RequestMapping("/main")
-	public String main() {
-		return "main";
-	}
-
 	/**
 	 * p.271 [리스트 11.5] handleStep1()
 	 */
@@ -84,6 +79,7 @@ public class RegisterController {
 
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("members", memberList);
+		logger.debug(memberList);
 		return "members";
 	}
 }
