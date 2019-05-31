@@ -23,6 +23,8 @@
 		<p>
 			<button type="submit">글 수정</button>
 		</p>
+		
+<input type="hidden" name="articleId" value="${article.articleId }" />
 	</form>
 </body>
 </html>

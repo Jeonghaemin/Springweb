@@ -74,39 +74,56 @@ public class ArticleController {
 		return "redirect:/app/article/list";
 }
 	
-	
+
+	/**
+	 * 글 수정 화면
+	 */
 	@GetMapping("/article/updateform")
-	public String articleUpdateForm(@RequestParam("articleId") String articleId,
+	public void updateform(@RequestParam("articleId") String articleId,
 			@SessionAttribute("MEMBER") Member member, Model model) {
 		Article article = articleDao.getArticle(articleId);
-		if (!article.getUserId().equals(member.getMemberId())) {
-			logger.debug("X", member.getName());
-			return "redirect:/app/article/view?articleId=" + article.getArticleId();
 
-		}
+		// 권한 체크 : 세션의 memberId와 글의 userId를 비교
+		if (!member.getMemberId().equals(article.getUserId()))
+			// 자신의 글이 아니면
+			throw new RuntimeException("No Authority!");
+
 		model.addAttribute("article", article);
-		return "article/updateform";
-}
-	
+	}
+
+	/**
+	 * 글 수정
+	 */
 	@PostMapping("/article/update")
-	public String articleUpdate(Article article) {
-		articleDao.updateArticle(article);
+	public String update(Article article,
+			@SessionAttribute("MEMBER") Member member) {
+		article.setUserId(member.getMemberId());
+		int updatedRows = articleDao.updateArticle(article);
+
+		// 권한 체크 : 글이 수정되었는지 확인
+		if (updatedRows == 0)
+			// 글이 수정되지 않음. 자신이 쓴 글이 아님
+			throw new RuntimeException("No Authority!");
+
 		return "redirect:/app/article/view?articleId=" + article.getArticleId();
 	}
-	
 
-	
+	/**
+	 * 글 삭제
+	 */
 	@GetMapping("/article/delete")
-	public String articleDelete(@RequestParam("articleId") String articleId, 
+	public String delete(@RequestParam("articleId") String articleId,
 			@SessionAttribute("MEMBER") Member member) {
-		Article article = articleDao.getArticle(articleId);
-		if (!article.getUserId().equals(member.getMemberId())) {
-			logger.debug("X", member.getName());
-			return "redirect:/app/article/view?articleId=" + article.getArticleId();
-		}
-		articleDao.deleteArticle(articleId);
-		return "article/delete";
-}
+		int updatedRows = articleDao.deleteArticle(articleId,
+				member.getMemberId());
 
+		// 권한 체크 : 글이 삭제되었는지 확인
+		if (updatedRows == 0)
+			// 글이 삭제되지 않음. 자신이 쓴 글이 아님
+			throw new RuntimeException("No Authority!");
+
+		logger.debug("글을 삭제했습니다. articleId={}", articleId);
+		return "redirect:/app/article/list";
+}
 	
 }
