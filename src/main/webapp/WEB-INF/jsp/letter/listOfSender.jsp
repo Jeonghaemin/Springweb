@@ -22,7 +22,7 @@ th {
 </head>
 <body>
 	<%@ include file="/WEB-INF/jsp/header.jsp"%>
-	<h2>글 목록</h2>
+	<h2>편지 목록</h2>
 
 	<table>
 		<thead>
@@ -36,10 +36,10 @@ th {
 		<tbody>
 			<c:forEach var="letter" items="${letters}">
 				<tr>
-					<td><a href="./app/letter/view?letterId=${letter.letterId }">${letter.letterId }</a></td>
-					<td><a href="./app/letter/view?letterId=${letter.letterId }">${letter.title }</a></td>
-					<td>${letter.receiverName }</td>
-					<td>${letter.cdate }</td>
+					<th><a href="./app/letter/view?letterId=${letter.letterId }&mode=SENT">${letter.letterId }</a></th>
+					<th><a href="./app/letter/view?letterId=${letter.letterId }&mode=SENT">${letter.title }</a></th>
+					<th>${letter.receiverName }</th>
+					<th>${letter.cdate }</th>
 				</tr>
 			</c:forEach>
 		</tbody>

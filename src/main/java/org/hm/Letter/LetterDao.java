@@ -66,7 +66,6 @@ public class LetterDao {
 	 * 삭제
 	 */
 	public int deleteLetter(String letterId, String memberId) {
-		return jdbcTemplate.update(GET_LETTER, letterId, memberId, memberId);
-	}
-
+		return jdbcTemplate.update(DELETE_LETTER, letterId, memberId, memberId);
+}
 }
